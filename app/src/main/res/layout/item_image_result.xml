@@ -18,7 +18,10 @@
         android:text="@string/label_title"
         android:id="@+id/tvTitle"
         android:ellipsize="end"
-        android:maxLines="2" />
+        android:maxLines="2"
+
+        android:textSize="12sp"
+        />
 
 
 </LinearLayout>

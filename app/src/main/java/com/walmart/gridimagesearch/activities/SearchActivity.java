@@ -40,7 +40,12 @@ public class SearchActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
         getViewReference();
-        imageResults = new ArrayList<ImageResult>();
+
+        if (savedInstanceState == null) {
+           imageResults = new ArrayList<ImageResult>();
+        } else {
+            imageResults = (ArrayList) savedInstanceState.getSerializable("imageResults");
+        }
         aImageResults = new ImageResultAdapter(this, imageResults);
         gvResults.setAdapter(aImageResults );
 
@@ -122,6 +127,7 @@ public class SearchActivity extends AppCompatActivity {
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         //outState.putStringArrayList("imageResults", imageResults);
+        outState.putSerializable("imageResults", imageResults);
         super.onSaveInstanceState(outState);
     }
 }

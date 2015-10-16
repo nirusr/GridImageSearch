@@ -1,5 +1,8 @@
 package com.walmart.gridimagesearch.models;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -9,7 +12,7 @@ import java.util.ArrayList;
 /**
  * Created by sgovind on 10/15/15.
  */
-public class ImageResult {
+public class ImageResult implements Parcelable {
 
     private String url;
     private String tbUrl;
@@ -88,5 +91,37 @@ public class ImageResult {
     public void setTbWidth(String tbWidth) {
         this.tbWidth = tbWidth;
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(this.url);
+        dest.writeString(this.tbUrl);
+        dest.writeString(this.title);
+        dest.writeString(this.tbHeight);
+        dest.writeString(this.tbWidth);
+    }
+
+    protected ImageResult(Parcel in) {
+        this.url = in.readString();
+        this.tbUrl = in.readString();
+        this.title = in.readString();
+        this.tbHeight = in.readString();
+        this.tbWidth = in.readString();
+    }
+
+    public static final Parcelable.Creator<ImageResult> CREATOR = new Parcelable.Creator<ImageResult>() {
+        public ImageResult createFromParcel(Parcel source) {
+            return new ImageResult(source);
+        }
+
+        public ImageResult[] newArray(int size) {
+            return new ImageResult[size];
+        }
+    };
 }
 

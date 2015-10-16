@@ -1,7 +1,9 @@
 package com.walmart.gridimagesearch.activities;
 
+import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.widget.ImageView;
 
 import com.squareup.picasso.Picasso;
@@ -22,9 +24,18 @@ public class ImageDisplayActivity extends AppCompatActivity {
 
         Picasso.with(this).load(imageUrl).fit().centerCrop().placeholder(R.mipmap.ic_launcher).into(ivFullImage);
 
-
-
-
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        switch (item.getItemId()) {
+            // Respond to the action bar's Up/Home button
+            case android.R.id.home:
+                NavUtils.navigateUpFromSameTask(this);
+                return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
 }
