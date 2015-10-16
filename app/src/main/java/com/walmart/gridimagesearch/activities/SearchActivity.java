@@ -1,12 +1,15 @@
 package com.walmart.gridimagesearch.activities;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.PersistableBundle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.Toast;
@@ -40,6 +43,19 @@ public class SearchActivity extends AppCompatActivity {
         imageResults = new ArrayList<ImageResult>();
         aImageResults = new ImageResultAdapter(this, imageResults);
         gvResults.setAdapter(aImageResults );
+
+
+        //Click Listener
+        gvResults.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                //Get the clicked item
+                ImageResult clickedImage = aImageResults.getItem(position);
+                Intent intent = new Intent(SearchActivity.this, ImageDisplayActivity.class);
+                intent.putExtra(ImageDisplayActivity.IMAGE_URL, clickedImage.getUrl());
+                startActivity(intent);
+            }
+        });
     }
 
     //Get reference of the views
@@ -66,10 +82,7 @@ public class SearchActivity extends AppCompatActivity {
                 public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                     JSONArray imageResultsJson = null;
                     try {
-
-
                         imageResultsJson = response.getJSONObject("responseData").getJSONArray("results");
-
                         //// TODO: 10/15/15  pagination
                         imageResults.clear();
                         //imageResults.addAll(ImageResult.fromJsonArray(imageResultsJson));
@@ -106,5 +119,9 @@ public class SearchActivity extends AppCompatActivity {
 
     }
 
-
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        //outState.putStringArrayList("imageResults", imageResults);
+        super.onSaveInstanceState(outState);
+    }
 }
