@@ -16,6 +16,7 @@ import android.widget.Toast;
 
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
+import com.walmart.gridimagesearch.adapters.EndlessScrollListener;
 import com.walmart.gridimagesearch.adapters.ImageResultAdapter;
 import com.walmart.gridimagesearch.models.ImageResult;
 import com.walmart.gridimagesearch.R;
@@ -34,6 +35,7 @@ public class SearchActivity extends AppCompatActivity {
     private GridView gvResults;
     private ArrayList<ImageResult> imageResults;
     private ImageResultAdapter aImageResults ;
+    private String query;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,7 +63,19 @@ public class SearchActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+        //Scroll Listner
+        gvResults.setOnScrollListener(new EndlessScrollListener() {
+            @Override
+            public boolean onLoadMore(int page, int totalItemsCount) {
+                customLoadMoreDataFromSite(totalItemsCount);
+
+                return false;
+            }
+        });
+
     }
+
 
     //Get reference of the views
     public void getViewReference() {
@@ -73,7 +87,7 @@ public class SearchActivity extends AppCompatActivity {
     //View v is the "button view"
     public void onImageSearch (View v) {
         //https://ajax.googleapis.com/ajax/services/search/images?v=1.0&q=Cat&rsz=8
-        String query = etQuery.getText().toString();
+        query = etQuery.getText().toString();
         if ( query.length() == 0 ) {
             query="Android";
         }
@@ -130,4 +144,41 @@ public class SearchActivity extends AppCompatActivity {
         outState.putSerializable("imageResults", imageResults);
         super.onSaveInstanceState(outState);
     }
+
+
+    private void customLoadMoreDataFromSite(int totalItemsCount) {
+
+        String Url = "https://ajax.googleapis.com/ajax/services/search/images?v=1.0&q=" + query + "&rsz=8" + "&start=" + totalItemsCount;
+        Log.i("url:", Url);
+
+        if (isNetworkAvailable()) {
+            AsyncHttpClient client = new AsyncHttpClient();
+            client.get(Url, new JsonHttpResponseHandler() {
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                    JSONArray imageResultsJson = null;
+                    try {
+                        imageResultsJson = response.getJSONObject("responseData").getJSONArray("results");
+                        //imageResults.addAll(ImageResult.fromJsonArray(imageResultsJson));
+                        aImageResults.addAll(ImageResult.fromJsonArray(imageResultsJson));
+                        Log.i("data:", imageResults.toString());
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                }
+
+                @Override
+                public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                    super.onFailure(statusCode, headers, responseString, throwable);
+                }
+            });
+
+        } else {
+            Toast.makeText(this, "Network is not available", Toast.LENGTH_SHORT).show();
+        }
+
+    }
+
 }

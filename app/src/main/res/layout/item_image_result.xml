@@ -19,7 +19,6 @@
         android:id="@+id/tvTitle"
         android:ellipsize="end"
         android:maxLines="2"
-
         android:textSize="12sp"
         />
 
