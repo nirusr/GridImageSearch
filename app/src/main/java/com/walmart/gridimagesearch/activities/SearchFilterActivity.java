@@ -13,6 +13,8 @@ import android.widget.Spinner;
 import com.walmart.gridimagesearch.R;
 import com.walmart.gridimagesearch.models.SearchFilterParcelable;
 
+import java.lang.reflect.Array;
+
 public class SearchFilterActivity extends AppCompatActivity {
     public Spinner spImageSize;
     public Spinner spColorFilter;
@@ -36,10 +38,23 @@ public class SearchFilterActivity extends AppCompatActivity {
         searchFilterParcelable = getIntent().getParcelableExtra(SearchActivity.SEARCH_FILTER);
         if ( searchFilterParcelable != null) {
 
-            ArrayAdapter<String> arrayAdapter = (ArrayAdapter<String>)spImageSize.getAdapter();
-            int p = arrayAdapter.getPosition(searchFilterParcelable.imageSizeFilter);
-            spImageSize.setSelection(p);
-            //TODO OTHER FIELDS
+            ArrayAdapter<String> aImageSize = (ArrayAdapter<String>)spImageSize.getAdapter();
+            int pSize = aImageSize.getPosition(searchFilterParcelable.imageSizeFilter);
+            spImageSize.setSelection(pSize);
+
+            ArrayAdapter<String> aColor = (ArrayAdapter<String>)spColorFilter.getAdapter();
+            int pColor = aColor.getPosition(searchFilterParcelable.imageColorFilter);
+            spColorFilter.setSelection(pColor);
+
+            ArrayAdapter<String> aType = (ArrayAdapter<String>) spImageType.getAdapter();
+            int pType = aType.getPosition(searchFilterParcelable.imageTypeFilter);
+            spImageType.setSelection(pType);
+
+            etSiteFilter.setText(searchFilterParcelable.imageSiteFilter);
+
+
+
+
 
         }
 
