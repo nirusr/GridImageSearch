@@ -11,14 +11,17 @@
     <string name="labelImageType">Image Type</string>
     <string name="labelSiteFilter">Site Filter</string>
     <string name="labelSaveButton">Save</string>
-    
+    <string name="prompt_imageSize">Select a size</string>
     <string-array name="imageSize_arrays">
+        <item>none</item>
         <item>small</item>
         <item>medium</item>
         <item>larget</item>
         <item>xlarge</item>
     </string-array>
+    <string name="prompt_imageColor">Select a Color</string>
     <string-array name="imageColor_arrays">
+        <item>none</item>
         <item>black</item>
         <item>blue</item>
         <item>brown</item>
@@ -32,7 +35,10 @@
         <item>white</item>
         <item>yellow</item>
     </string-array>
+    <string name="prompt_imageType">Select a Type</string>
+    <string name="hint_siteFilter">Type a Site e.g. yahoo.com</string>
     <string-array name="imageType_arrays">
+        <item>none</item>
         <item>face</item>
         <item>photo</item>
         <item>clipart</item>

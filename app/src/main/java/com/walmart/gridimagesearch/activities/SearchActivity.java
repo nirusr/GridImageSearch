@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.os.PersistableBundle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -23,12 +22,18 @@ import com.walmart.gridimagesearch.adapters.EndlessScrollListener;
 import com.walmart.gridimagesearch.adapters.ImageResultAdapter;
 import com.walmart.gridimagesearch.models.ImageResult;
 import com.walmart.gridimagesearch.R;
+import com.walmart.gridimagesearch.models.SearchFilterParcelable;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import cz.msebera.android.httpclient.Header;
 
@@ -39,12 +44,22 @@ public class SearchActivity extends AppCompatActivity {
     private ArrayList<ImageResult> imageResults;
     private ImageResultAdapter aImageResults ;
     private String query;
+    public static final int REQUEST_CODE = 29;
+    public static final String SEARCH_FILTER = "SEARCH_FILTER";
+
+
+    public String imageSizeFilter;
+    public String imageColorFilter;
+    public String imageTypeFilter;
+    public String imageSiteFilter;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
         getViewReference();
+
 
         if (savedInstanceState == null) {
            imageResults = new ArrayList<ImageResult>();
@@ -76,7 +91,6 @@ public class SearchActivity extends AppCompatActivity {
                 return false;
             }
         });
-
     }
 
 
@@ -199,12 +213,24 @@ public class SearchActivity extends AppCompatActivity {
 
             case R.id.actionSearchFilter: {
                 Intent intent = new Intent(this, SearchFilterActivity.class);
-                startActivity(intent);
+                startActivityForResult(intent, REQUEST_CODE);
             }
             default:return super.onOptionsItemSelected(item);
 
 
         }
 
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        String t = new String();
+        if (resultCode == RESULT_OK && requestCode == REQUEST_CODE) {
+            SearchFilterParcelable searchFilterParcelable= (SearchFilterParcelable) data.getParcelableExtra(SEARCH_FILTER);
+            //Log.i("Size=>", searchFilterParcelable.imageSizeFilter);
+
+        }
+
+        super.onActivityResult(requestCode, resultCode, data);
     }
 }
