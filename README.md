@@ -39,7 +39,7 @@ The following **additional** features are implemented:
 ## Video Walkthrough 
 
 Here's a walkthrough of implemented user stories:
-
+https://goo.gl/photos/V2vEAAsrNwve6fEi9
 
 
 GIF created with [LiceCap](http://www.cockos.com/licecap/).
