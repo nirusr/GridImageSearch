@@ -1,6 +1,7 @@
 package com.walmart.gridimagesearch.adapters;
 
 import android.content.Context;
+
 import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,6 +22,11 @@ import java.util.zip.Inflater;
  */
 public class ImageResultAdapter extends ArrayAdapter<ImageResult> {
 
+    private static class ViewHolder {
+        ImageView ivImage;
+        TextView tvTitle;
+    }
+
     public ImageResultAdapter(Context context, List<ImageResult> images) {
         super(context, R.layout.item_image_result, images);
     }
@@ -28,20 +34,25 @@ public class ImageResultAdapter extends ArrayAdapter<ImageResult> {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-
         ImageResult imageInfo = getItem(position);
+        ViewHolder viewHolder;
 
         if (convertView == null) {
-            convertView = LayoutInflater.from(getContext()).inflate(R.layout.item_image_result, parent, false);
+
+            viewHolder = new ViewHolder();
+            LayoutInflater inflater = LayoutInflater.from(getContext());
+            convertView = inflater.inflate(R.layout.item_image_result, parent, false);
+            viewHolder.tvTitle = (TextView) convertView.findViewById(R.id.tvTitle);
+            viewHolder.ivImage = (ImageView) convertView.findViewById(R.id.ivImage);
+            convertView.setTag(viewHolder);
+
+        } else {
+            viewHolder = (ViewHolder) convertView.getTag();
         }
 
-        ImageView ivImage = (ImageView) convertView.findViewById(R.id.ivImage);
-        TextView tvTitle = (TextView) convertView.findViewById(R.id.tvTitle);
+        viewHolder.tvTitle.setText(Html.fromHtml(imageInfo.getTitle()));
+        Picasso.with(getContext()).load(imageInfo.getTbUrl()).fit().centerCrop().into(viewHolder.ivImage);
 
-        tvTitle.setText(Html.fromHtml(imageInfo.getTitle()));
-
-        ivImage.setImageResource(0); //clear previous image
-        Picasso.with(getContext()).load(imageInfo.getTbUrl()).fit().centerCrop().into(ivImage);
 
         return convertView;
 
