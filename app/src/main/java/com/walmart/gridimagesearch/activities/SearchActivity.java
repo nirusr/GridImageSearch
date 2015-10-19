@@ -277,16 +277,16 @@ public class SearchActivity extends AppCompatActivity {
     public void buildSearchQuery(SearchFilterParcelable searchFilterParcelable) {
         urlSearchQuery = new StringBuffer();
 
-        if ( ! searchFilterParcelable.imageSizeFilter.equalsIgnoreCase("none")) {
+        if (  searchFilterParcelable.imageSizeFilter.length() != 0) {
             urlSearchQuery.append("&"+ Qimgsz);
             urlSearchQuery.append(searchFilterParcelable.imageSizeFilter);
 
         }
-        if (! searchFilterParcelable.imageTypeFilter.equalsIgnoreCase("none")) {
+        if ( searchFilterParcelable.imageTypeFilter.length() != 0) {
             urlSearchQuery.append("&"+Qas_filetype);
             urlSearchQuery.append(searchFilterParcelable.imageTypeFilter);
         }
-        if (! searchFilterParcelable.imageColorFilter.equalsIgnoreCase("none")) {
+        if (searchFilterParcelable.imageColorFilter.length() != 0) {
             urlSearchQuery.append("&"+Qimgcolor);
             urlSearchQuery.append(searchFilterParcelable.imageColorFilter);
         }
