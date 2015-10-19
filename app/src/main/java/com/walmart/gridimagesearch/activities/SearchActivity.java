@@ -12,6 +12,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.Toast;
@@ -44,6 +45,7 @@ public class SearchActivity extends AppCompatActivity {
     private ArrayList<ImageResult> imageResults;
     private ImageResultAdapter aImageResults ;
     private String query;
+
     public static final int REQUEST_CODE = 29;
     public static final String SEARCH_FILTER = "SEARCH_FILTER";
 
@@ -53,13 +55,22 @@ public class SearchActivity extends AppCompatActivity {
     public String imageTypeFilter;
     public String imageSiteFilter;
 
+    //Search Arguments
+    public static final String Qimgcolor = "imgcolor=";
+    public static final String Qas_sitesearch = "as_sitesearch=";
+    public static final String Qas_filetype = "as_filetype=";
+    public static final String Qimgsz = "imgsz=";
+    public StringBuffer urlSearchQuery ;
+    public String Url;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
         getViewReference();
-
+        urlSearchQuery = null;
 
         if (savedInstanceState == null) {
            imageResults = new ArrayList<ImageResult>();
@@ -109,7 +120,12 @@ public class SearchActivity extends AppCompatActivity {
             query="Android";
         }
 
-        String Url = "https://ajax.googleapis.com/ajax/services/search/images?v=1.0&q=" + query + "&rsz=8";
+        if ( urlSearchQuery == null ) {
+            Url = "https://ajax.googleapis.com/ajax/services/search/images?v=1.0&q=" + query + "&rsz=8";
+        }  else {
+            Url = "https://ajax.googleapis.com/ajax/services/search/images?v=1.0&q=" + query + "&rsz=8" + urlSearchQuery.toString();
+        }
+        Log.i("Url:", Url);
 
         if (isNetworkAvailable()) {
             AsyncHttpClient client = new AsyncHttpClient();
@@ -165,7 +181,15 @@ public class SearchActivity extends AppCompatActivity {
 
     private void customLoadMoreDataFromSite(int totalItemsCount) {
 
-        String Url = "https://ajax.googleapis.com/ajax/services/search/images?v=1.0&q=" + query + "&rsz=8" + "&start=" + totalItemsCount;
+       // String Url = "https://ajax.googleapis.com/ajax/services/search/images?v=1.0&q=" + query + "&rsz=8" + "&start=" + totalItemsCount;
+
+        if ( urlSearchQuery == null ) {
+            Url = "https://ajax.googleapis.com/ajax/services/search/images?v=1.0&q=" + query + "&rsz=8" + "&start=" + totalItemsCount;
+        }  else {
+            Url = "https://ajax.googleapis.com/ajax/services/search/images?v=1.0&q=" + query + "&rsz=8" + "&start=" + totalItemsCount+ urlSearchQuery.toString();
+        }
+
+
         Log.i("url:", Url);
 
         if (isNetworkAvailable()) {
@@ -229,8 +253,42 @@ public class SearchActivity extends AppCompatActivity {
             SearchFilterParcelable searchFilterParcelable= (SearchFilterParcelable) data.getParcelableExtra(SEARCH_FILTER);
             //Log.i("Size=>", searchFilterParcelable.imageSizeFilter);
 
+            //TEST Start
+            Button btnSearch = (Button) findViewById(R.id.btnSearch);
+            buildSearchQuery(searchFilterParcelable);
+            onImageSearch(btnSearch);
+
+
+            //TEST End
+
+
         }
 
         super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    public void buildSearchQuery(SearchFilterParcelable searchFilterParcelable) {
+        urlSearchQuery = new StringBuffer();
+
+        if ( ! searchFilterParcelable.imageSizeFilter.equalsIgnoreCase("none")) {
+            urlSearchQuery.append("&"+ Qimgsz);
+            urlSearchQuery.append(searchFilterParcelable.imageSizeFilter);
+
+        }
+        if (! searchFilterParcelable.imageTypeFilter.equalsIgnoreCase("none")) {
+            urlSearchQuery.append("&"+Qas_filetype);
+            urlSearchQuery.append(searchFilterParcelable.imageTypeFilter);
+        }
+        if (! searchFilterParcelable.imageColorFilter.equalsIgnoreCase("none")) {
+            urlSearchQuery.append("&"+Qimgcolor);
+            urlSearchQuery.append(searchFilterParcelable.imageColorFilter);
+        }
+
+        if (searchFilterParcelable.imageSiteFilter.length() != 0 ) {
+            urlSearchQuery.append("&"+Qas_sitesearch);
+            urlSearchQuery.append(searchFilterParcelable.imageSiteFilter);
+        }
+
+
     }
 }

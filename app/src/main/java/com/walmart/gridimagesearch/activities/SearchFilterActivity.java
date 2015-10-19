@@ -37,7 +37,7 @@ public class SearchFilterActivity extends AppCompatActivity {
         //Get reference on spinner
         spImageSize = (Spinner) findViewById(R.id.spImageSize);
         spColorFilter = (Spinner) findViewById(R.id.spColorFilter);
-        spImageType = (Spinner) findViewById(R.id.spImageSize);
+        spImageType = (Spinner) findViewById(R.id.spImageType);
         etSiteFilter = (EditText) findViewById(R.id.etSiteFilter);
 
         //Get the selected values from the spinner
