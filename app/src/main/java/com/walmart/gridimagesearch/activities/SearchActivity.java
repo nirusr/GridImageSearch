@@ -63,6 +63,7 @@ public class SearchActivity extends AppCompatActivity {
     public StringBuffer urlSearchQuery ;
     public String Url;
 
+    public SearchFilterParcelable searchFilterParcelable;
 
 
     @Override
@@ -78,7 +79,7 @@ public class SearchActivity extends AppCompatActivity {
             imageResults = (ArrayList) savedInstanceState.getSerializable("imageResults");
         }
         aImageResults = new ImageResultAdapter(this, imageResults);
-        gvResults.setAdapter(aImageResults );
+        gvResults.setAdapter(aImageResults);
 
 
         //Click Listener
@@ -102,6 +103,8 @@ public class SearchActivity extends AppCompatActivity {
                 return false;
             }
         });
+
+        searchFilterParcelable = null;
     }
 
 
@@ -237,6 +240,16 @@ public class SearchActivity extends AppCompatActivity {
 
             case R.id.actionSearchFilter: {
                 Intent intent = new Intent(this, SearchFilterActivity.class);
+
+                //Send the previous search info to show
+                if ( searchFilterParcelable != null ) {
+                    Log.i("Searchable", "YES");
+                    intent.putExtra(SEARCH_FILTER, searchFilterParcelable);
+                } else {
+                    Log.i("Searchable", "NO");
+                }
+
+
                 startActivityForResult(intent, REQUEST_CODE);
             }
             default:return super.onOptionsItemSelected(item);
@@ -248,19 +261,13 @@ public class SearchActivity extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        String t = new String();
-        if (resultCode == RESULT_OK && requestCode == REQUEST_CODE) {
-            SearchFilterParcelable searchFilterParcelable= (SearchFilterParcelable) data.getParcelableExtra(SEARCH_FILTER);
-            //Log.i("Size=>", searchFilterParcelable.imageSizeFilter);
 
-            //TEST Start
+        if (resultCode == RESULT_OK && requestCode == REQUEST_CODE) {
+            searchFilterParcelable= (SearchFilterParcelable) data.getParcelableExtra(SEARCH_FILTER);
+            //Log.i("Size=>", searchFilterParcelable.imageSizeFilter);
             Button btnSearch = (Button) findViewById(R.id.btnSearch);
             buildSearchQuery(searchFilterParcelable);
             onImageSearch(btnSearch);
-
-
-            //TEST End
-
 
         }
 
