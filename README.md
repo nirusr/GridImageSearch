@@ -22,7 +22,7 @@ The following **required** functionality is completed:
 The following **optional** features are implemented:
 
 * [ ] Implements robust error handling, [check if internet is available](http://guides.codepath.com/android/Sending-and-Managing-Network-Requests#checking-for-network-connectivity), handle error cases, network failures
-* [ ] Used the **ActionBar SearchView** or custom layout as the query box instead of an EditText
+* [X] Used the **ActionBar SearchView** or custom layout as the query box instead of an EditText
 * [ ] User can **share an image** to their friends or email it to themselves
 * [ ] Replaced Filter Settings Activity with a lightweight modal overlay
 * [ ] Improved the user interface and experiment with image assets and/or styling and coloring
@@ -39,7 +39,7 @@ The following **additional** features are implemented:
 ## Video Walkthrough 
 
 Here's a walkthrough of implemented user stories:
-https://goo.gl/photos/V2vEAAsrNwve6fEi9
+https://goo.gl/photos/k81pkkq4FhSprq4H9
 
 
 GIF created with [LiceCap](http://www.cockos.com/licecap/).
