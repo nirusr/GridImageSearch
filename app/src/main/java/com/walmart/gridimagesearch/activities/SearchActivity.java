@@ -4,8 +4,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.SearchView;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -40,7 +42,7 @@ import cz.msebera.android.httpclient.Header;
 
 public class SearchActivity extends AppCompatActivity {
 
-    private EditText etQuery;
+
     private GridView gvResults;
     private ArrayList<ImageResult> imageResults;
     private ImageResultAdapter aImageResults ;
@@ -110,57 +112,11 @@ public class SearchActivity extends AppCompatActivity {
 
     //Get reference of the views
     public void getViewReference() {
-        etQuery = (EditText) findViewById(R.id.etQuery);
+
         gvResults = (GridView) findViewById(R.id.gvResults);
     }
 
-    //Fired when sesarch button is clicked
-    //View v is the "button view"
-    public void onImageSearch (View v) {
-        //https://ajax.googleapis.com/ajax/services/search/images?v=1.0&q=Cat&rsz=8
-        query = etQuery.getText().toString();
-        if ( query.length() == 0 ) {
-            query="Android";
-        }
 
-        if ( urlSearchQuery == null ) {
-            Url = "https://ajax.googleapis.com/ajax/services/search/images?v=1.0&q=" + query + "&rsz=8";
-        }  else {
-            Url = "https://ajax.googleapis.com/ajax/services/search/images?v=1.0&q=" + query + "&rsz=8" + urlSearchQuery.toString();
-        }
-        Log.i("Url:", Url);
-
-        if (isNetworkAvailable()) {
-            AsyncHttpClient client = new AsyncHttpClient();
-            client.get(Url, new JsonHttpResponseHandler() {
-                @Override
-                public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                    JSONArray imageResultsJson = null;
-                    try {
-                        imageResultsJson = response.getJSONObject("responseData").getJSONArray("results");
-                        //// TODO: 10/15/15  pagination
-                        imageResults.clear();
-                        //imageResults.addAll(ImageResult.fromJsonArray(imageResultsJson));
-                        aImageResults.addAll(ImageResult.fromJsonArray(imageResultsJson));
-                        Log.i("data:", imageResults.toString());
-
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-
-                }
-
-                @Override
-                public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                     super.onFailure(statusCode, headers, responseString, throwable);
-                }
-            });
-
-        } else {
-            Toast.makeText(this, "Network is not available", Toast.LENGTH_SHORT).show();
-        }
-
-   }
     //Check Network Connectivity
     public Boolean isNetworkAvailable(){
         Boolean networkConn = false;
@@ -229,8 +185,74 @@ public class SearchActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu_main, menu);
+        MenuItem searchItem = menu.findItem(R.id.action_search);
+        SearchView searchView = (SearchView)MenuItemCompat.getActionView(searchItem);
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                fetchImages(query);
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                return false;
+            }
+        });
+
 
         return super.onCreateOptionsMenu(menu);
+
+
+
+    }
+
+    public void fetchImages(String qString) {
+        query = qString;
+        if ( query.length() == 0 ) {
+            query="Android";
+        }
+
+        if ( urlSearchQuery == null ) {
+            Url = "https://ajax.googleapis.com/ajax/services/search/images?v=1.0&q=" + query + "&rsz=8";
+        }  else {
+            Url = "https://ajax.googleapis.com/ajax/services/search/images?v=1.0&q=" + query + "&rsz=8" + urlSearchQuery.toString();
+        }
+        Log.i("Url:", Url);
+
+        if (isNetworkAvailable()) {
+            AsyncHttpClient client = new AsyncHttpClient();
+            client.get(Url, new JsonHttpResponseHandler() {
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                    JSONArray imageResultsJson = null;
+                    try {
+                        imageResultsJson = response.getJSONObject("responseData").getJSONArray("results");
+                        //// TODO: 10/15/15  pagination
+                        imageResults.clear();
+                        //imageResults.addAll(ImageResult.fromJsonArray(imageResultsJson));
+                        aImageResults.addAll(ImageResult.fromJsonArray(imageResultsJson));
+                        Log.i("data:", imageResults.toString());
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                }
+
+                @Override
+                public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                    super.onFailure(statusCode, headers, responseString, throwable);
+                }
+            });
+
+        } else {
+            Toast.makeText(this, "Network is not available", Toast.LENGTH_SHORT).show();
+        }
+
+
+
     }
 
     @Override
@@ -265,9 +287,10 @@ public class SearchActivity extends AppCompatActivity {
         if (resultCode == RESULT_OK && requestCode == REQUEST_CODE) {
             searchFilterParcelable= (SearchFilterParcelable) data.getParcelableExtra(SEARCH_FILTER);
             //Log.i("Size=>", searchFilterParcelable.imageSizeFilter);
-            Button btnSearch = (Button) findViewById(R.id.btnSearch);
+
             buildSearchQuery(searchFilterParcelable);
-            onImageSearch(btnSearch);
+
+            fetchImages(query);
 
         }
 
