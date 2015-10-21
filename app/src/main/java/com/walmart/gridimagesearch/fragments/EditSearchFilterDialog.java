@@ -153,12 +153,13 @@ public class EditSearchFilterDialog extends DialogFragment implements  View.OnCl
 
         if (v.getId() == R.id.btnReset) {
             filter = new SearchFilterParcelable();
-            listner.onEditSearchFilterDialogDone(this.getTag(), false, filter);
+            //listner.onEditSearchFilterDialogDone(this.getTag(), false, filter);
             spImageSize.setSelection(0);
             spColorFilter.setSelection(0);
             spImageType.setSelection(0);
             etSiteFilter.setText("");
         }
+
 
         if (v.getId() == R.id.btnCancel) {
             filter = new SearchFilterParcelable();

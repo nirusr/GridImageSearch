@@ -344,8 +344,16 @@ public class SearchActivity extends AppCompatActivity implements EditSearchFilte
 
     @Override
     public void onEditSearchFilterDialogDone(String tag, boolean cancelled, SearchFilterParcelable filter) {
+
+
         searchFilterParcelable = filter;
-        buildSearchQuery(searchFilterParcelable);
+
+        if ( searchFilterParcelable != null ) {
+            buildSearchQuery(searchFilterParcelable);
+        } else {
+            urlSearchQuery.setLength(0);
+        }
+
 
         fetchImages(query);
 
