@@ -80,6 +80,7 @@ public class SearchActivity extends AppCompatActivity implements EditSearchFilte
         setContentView(R.layout.activity_search);
         getViewReference();
         urlSearchQuery = null;
+        query = new String();
 
         if (savedInstanceState == null) {
            imageResults = new ArrayList<ImageResult>();
