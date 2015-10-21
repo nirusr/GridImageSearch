@@ -28,4 +28,5 @@ dependencies {
     compile 'commons-io:commons-io:2.4'
     compile 'com.android.support:appcompat-v7:23.1.0'
     compile 'com.android.support:recyclerview-v7:23.1.0'
+    compile 'com.etsy.android.grid:library:1.0.5'
 }

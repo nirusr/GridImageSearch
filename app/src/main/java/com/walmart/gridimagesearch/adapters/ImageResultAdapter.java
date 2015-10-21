@@ -15,7 +15,6 @@ import com.walmart.gridimagesearch.R;
 import com.walmart.gridimagesearch.models.ImageResult;
 
 import java.util.List;
-import java.util.zip.Inflater;
 
 /**
  * Created by sgovind on 10/15/15.
@@ -42,7 +41,7 @@ public class ImageResultAdapter extends ArrayAdapter<ImageResult> {
             viewHolder = new ViewHolder();
             LayoutInflater inflater = LayoutInflater.from(getContext());
             convertView = inflater.inflate(R.layout.item_image_result, parent, false);
-            viewHolder.tvTitle = (TextView) convertView.findViewById(R.id.tvTitle);
+            viewHolder.tvTitle = (TextView) convertView.findViewById(R.id.tvImageSizeTitle);
             viewHolder.ivImage = (ImageView) convertView.findViewById(R.id.ivImage);
             convertView.setTag(viewHolder);
 

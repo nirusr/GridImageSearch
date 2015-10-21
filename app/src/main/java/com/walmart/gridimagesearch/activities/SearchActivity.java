@@ -1,9 +1,12 @@
 package com.walmart.gridimagesearch.activities;
 
+import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.Parcelable;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -19,10 +22,13 @@ import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.Toast;
 
+import com.etsy.android.grid.StaggeredGridView;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.walmart.gridimagesearch.adapters.EndlessScrollListener;
 import com.walmart.gridimagesearch.adapters.ImageResultAdapter;
+import com.walmart.gridimagesearch.fragments.EditSearchFilterDialog;
+import com.walmart.gridimagesearch.interfaces.EditSearchFilterDialogListener;
 import com.walmart.gridimagesearch.models.ImageResult;
 import com.walmart.gridimagesearch.R;
 import com.walmart.gridimagesearch.models.SearchFilterParcelable;
@@ -40,7 +46,7 @@ import java.util.HashMap;
 
 import cz.msebera.android.httpclient.Header;
 
-public class SearchActivity extends AppCompatActivity {
+public class SearchActivity extends AppCompatActivity implements EditSearchFilterDialogListener{
 
 
     private GridView gvResults;
@@ -107,6 +113,10 @@ public class SearchActivity extends AppCompatActivity {
         });
 
         searchFilterParcelable = null;
+
+
+        //dialog Fragment
+       // showSearchOptionsDialog();
     }
 
 
@@ -114,6 +124,7 @@ public class SearchActivity extends AppCompatActivity {
     public void getViewReference() {
 
         gvResults = (GridView) findViewById(R.id.gvResults);
+
     }
 
 
@@ -263,17 +274,20 @@ public class SearchActivity extends AppCompatActivity {
             case R.id.actionSearchFilter: {
                 Intent intent = new Intent(this, SearchFilterActivity.class);
 
-                //Send the previous search info to show
-                if ( searchFilterParcelable != null ) {
+
+               /* if ( searchFilterParcelable != null ) {
                     Log.i("Searchable", "YES");
                     intent.putExtra(SEARCH_FILTER, searchFilterParcelable);
                 } else {
                     Log.i("Searchable", "NO");
                 }
+                startActivityForResult(intent, REQUEST_CODE);*/
 
-
-                startActivityForResult(intent, REQUEST_CODE);
-            }
+                FragmentManager fm = getSupportFragmentManager();
+                android.support.v4.app.FragmentTransaction ft = fm.beginTransaction();
+                EditSearchFilterDialog dialog = EditSearchFilterDialog.newInstance("Advanced Search Filter", searchFilterParcelable);
+                dialog.show(ft, "SEARCH_OPTIONS_DIALOG_TAG");
+        }
             default:return super.onOptionsItemSelected(item);
 
 
@@ -315,10 +329,28 @@ public class SearchActivity extends AppCompatActivity {
         }
 
         if (searchFilterParcelable.imageSiteFilter.length() != 0 ) {
-            urlSearchQuery.append("&"+Qas_sitesearch);
+            urlSearchQuery.append("&" + Qas_sitesearch);
             urlSearchQuery.append(searchFilterParcelable.imageSiteFilter);
         }
 
+
+    }
+
+    public void showSearchOptionsDialog()  {
+        FragmentManager fm = getSupportFragmentManager();
+        EditSearchFilterDialog editSearchFilterDialog = EditSearchFilterDialog.newInstance("Advanced Search Filter",searchFilterParcelable);
+        editSearchFilterDialog.show(fm, "fragment_search_options");
+    }
+
+    @Override
+    public void onEditSearchFilterDialogDone(String tag, boolean cancelled, SearchFilterParcelable filter) {
+        searchFilterParcelable = filter;
+        buildSearchQuery(searchFilterParcelable);
+
+        fetchImages(query);
+
+//        String s = tag + "responds with:" + filter.toString();
+//        Toast.makeText(this, s, Toast.LENGTH_SHORT).show();
 
     }
 }

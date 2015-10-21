@@ -12,6 +12,7 @@
     <string name="labelSiteFilter">Site Filter</string>
     <string name="labelSaveButton">Save</string>
     <string name="labelResetButton">Reset</string>
+    <string name="labelCancelButton">Cancel</string>
     <string name="prompt_imageSize">Select a size</string>
     <string-array name="imageSize_arrays">
         <item></item>

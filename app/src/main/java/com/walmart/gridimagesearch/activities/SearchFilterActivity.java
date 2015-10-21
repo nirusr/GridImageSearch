@@ -1,7 +1,6 @@
 package com.walmart.gridimagesearch.activities;
 
 import android.content.Intent;
-import android.os.PersistableBundle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -13,8 +12,6 @@ import android.widget.Toast;
 
 import com.walmart.gridimagesearch.R;
 import com.walmart.gridimagesearch.models.SearchFilterParcelable;
-
-import java.lang.reflect.Array;
 
 public class SearchFilterActivity extends AppCompatActivity {
     public Spinner spImageSize;
@@ -47,7 +44,7 @@ public class SearchFilterActivity extends AppCompatActivity {
         //Set the search fields with previous values
         aImageSize = (ArrayAdapter<String>)spImageSize.getAdapter();
         aColor = (ArrayAdapter<String>)spColorFilter.getAdapter();
-        ArrayAdapter<String> aType = (ArrayAdapter<String>) spImageType.getAdapter();
+        aType = (ArrayAdapter<String>) spImageType.getAdapter();
 
         searchFilterParcelable = getIntent().getParcelableExtra(SearchActivity.SEARCH_FILTER);
         if ( searchFilterParcelable != null) {
@@ -75,8 +72,8 @@ public class SearchFilterActivity extends AppCompatActivity {
     public void getReferences() {
         //Get reference on spinner
         spImageSize = (Spinner) findViewById(R.id.spImageSize);
-        spColorFilter = (Spinner) findViewById(R.id.spColorFilter);
-        spImageType = (Spinner) findViewById(R.id.spImageType);
+        spColorFilter = (Spinner) findViewById(R.id.spColorFilterD);
+        spImageType = (Spinner) findViewById(R.id.spImageTypeD);
         etSiteFilter = (EditText) findViewById(R.id.etSiteFilter);
 
 

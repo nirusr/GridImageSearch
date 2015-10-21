@@ -12,8 +12,6 @@ import com.squareup.picasso.Picasso;
 import com.walmart.gridimagesearch.R;
 import com.walmart.gridimagesearch.models.ImageResult;
 
-import org.w3c.dom.Text;
-
 import java.util.List;
 
 /**
@@ -38,7 +36,7 @@ public class ImageResultsRecyclerAdapter extends RecyclerView.Adapter<ImageResul
 
             super(itemView);
             ivImage = (ImageView) itemView.findViewById(R.id.ivImage);
-            tvTitle = (TextView) itemView.findViewById(R.id.tvTitle);
+            tvTitle = (TextView) itemView.findViewById(R.id.tvImageSizeTitle);
 
         }
     }
